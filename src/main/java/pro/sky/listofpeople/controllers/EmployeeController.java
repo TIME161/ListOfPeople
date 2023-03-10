@@ -8,13 +8,15 @@ import pro.sky.listofpeople.exceptions.EmployeeNotFoundException;
 import pro.sky.listofpeople.exceptions.EmployeeStorageIsFullException;
 import pro.sky.listofpeople.service.EmployeeService;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 
 @RequestMapping(value = "/employee")
 public class EmployeeController {
     EmployeeService service = new EmployeeService();
+
+
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(EmployeeNotFoundException.class)
@@ -44,13 +46,13 @@ public class EmployeeController {
         return service.remove(firstName, lastName);
     }
 
-    @RequestMapping("/add")
-    public Employee add(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
-        return service.add(firstName, lastName);
-    }
+     @RequestMapping("/add")
+     public Employee add(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+         return service.add(firstName, lastName);
+     }
 
     @RequestMapping("/all")
-    public List<Employee> all() {
+    public Map<String,Employee> all() {
         return service.all();
     }
 }

@@ -5,55 +5,71 @@ import pro.sky.listofpeople.exceptions.EmployeeAlreadyAddedException;
 import pro.sky.listofpeople.exceptions.EmployeeNotFoundException;
 import pro.sky.listofpeople.exceptions.EmployeeStorageIsFullException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class EmployeeService {
+    public String key;
+
     private final int maxEmployeesCount = 11;
-    List<Employee> employees = new ArrayList<>(Arrays.asList(
-            new Employee("Арнольд","Шашков"),
-            new Employee("Тарас","Власов"),
-            new Employee("Егор","Матвеев" ),
-            new Employee("Родион","Гордеев"),
-            new Employee("Юстин","Николаев"),
-            new Employee("Ева","Моисеева"),
-            new Employee("Ульяна","Кузнецова"),
-            new Employee("Харитина","Логинова"),
-            new Employee("Ляля","Лукина"),
-            new Employee("Астра","Боброва")
+    Map<String,Employee> employeesWithKey = new HashMap<>(Map.of(
+            "АрнольдШашков",
+            new Employee("Арнольд", "Шашков"),
+            "ТарасВласов",
+            new Employee("Тарас", "Власов"),
+            "ЕгорМатвеев",
+            new Employee("Егор", "Матвеев"),
+            "РодионГордеев",
+            new Employee("Родион", "Гордеев"),
+            "ЮстинНиколаев",
+            new Employee("Юстин", "Николаев"),
+            "ЕваМоисеева",
+            new Employee("Ева", "Моисеева"),
+            "УльянаКузнецова",
+            new Employee("Ульяна", "Кузнецова"),
+            "ХаритинаЛогинова",
+            new Employee("Харитина", "Логинова"),
+            "ЛяляЛукина",
+            new Employee("Ляля", "Лукина"),
+            "АстраБоброва",
+            new Employee("Астра", "Боброва")
     ));
 
     public Employee find(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
+        key = firstName + lastName;
+
+        if (employeesWithKey.containsKey(key)) {
             return employee;
         } else throw new EmployeeNotFoundException("Такого пользователя нет в базе");
     }
 
     public Employee remove(String firstName, String lastName) {
         Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
-            employees.remove(employee);
+        key = firstName + lastName;
+
+        if (employeesWithKey.containsKey(key)) {
+            employeesWithKey.remove(key);
             return employee;
         } else throw new EmployeeNotFoundException("Такого пользователя нет в базе");
     }
 
-    public Employee add(String firstName, String lastName) {
-        Employee employee = new Employee(firstName, lastName);
-        if (employees.contains(employee)) {
-            throw new EmployeeAlreadyAddedException("Такой пользователь уже имеется");
-        }
-            if (employees.size() == maxEmployeesCount) {
-            throw new EmployeeStorageIsFullException("База данных переполнена");
-        }
-            else {
-            employees.add(employee);
-            return employee;
-        }
-    }
+     public Employee add(String firstName, String lastName) {
+         Employee employee = new Employee(firstName, lastName);
+         key = firstName + lastName;
 
-    public List<Employee> all() {
-            return employees;
+         if (employeesWithKey.containsKey(key)) {
+             throw new EmployeeAlreadyAddedException("Такой пользователь уже имеется");
+         }
+         if (employeesWithKey.size() == maxEmployeesCount) {
+             throw new EmployeeStorageIsFullException("База данных переполнена");
+         } else {
+             employeesWithKey.put(key,employee);
+             return employee;
+         }
+     }
+
+    public Map<String,Employee> all() {
+        return employeesWithKey;
     }
 }
