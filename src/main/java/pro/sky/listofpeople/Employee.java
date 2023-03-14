@@ -4,17 +4,31 @@ import java.util.Objects;
 public class Employee {
     private  final String firstname;
     private final String lastname;
+    private final int departmentId;
+    private final float salary;
 
-    public Employee( String lastname, String firstname) {
+
+    public Employee(String firstname, String lastname, int departmentId, float salary) {
         this.firstname = firstname;
         this.lastname = lastname;
+        this.departmentId = departmentId;
+        this.salary = salary;
     }
 
     public String getFirstname() {
         return firstname;
     }
+
     public String getLastname() {
         return lastname;
+    }
+
+    public int getDepartmentId() {
+        return departmentId;
+    }
+
+    public float getSalary() {
+        return salary;
     }
 
     @Override
