@@ -1,4 +1,4 @@
-package pro.sky.listofpeople;
+package pro.sky.listofpeople.model;
 import java.util.Objects;
 
 public class Employee {

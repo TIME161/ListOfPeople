@@ -1,6 +1,8 @@
 package pro.sky.listofpeople.service;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import pro.sky.listofpeople.Employee;
+import pro.sky.listofpeople.exceptions.IncorrectEmployeeDataException;
+import pro.sky.listofpeople.model.Employee;
 import pro.sky.listofpeople.exceptions.EmployeeAlreadyAddedException;
 import pro.sky.listofpeople.exceptions.EmployeeNotFoundException;
 import pro.sky.listofpeople.exceptions.EmployeeStorageIsFullException;
@@ -27,6 +29,7 @@ public class EmployeeService {
     ));
 
     public Employee find(String firstName, String lastName, int departmentId, float salary) {
+        checkCorrectFirstLastName(firstName,lastName);
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
         if (employees.contains(employee)) {
 
@@ -35,6 +38,7 @@ public class EmployeeService {
     }
 
     public Employee remove(String firstName, String lastName, int departmentId, float salary) {
+        checkCorrectFirstLastName(firstName,lastName);
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
         if (employees.contains(employee)) {
             employees.remove(employee);
@@ -44,6 +48,7 @@ public class EmployeeService {
     }
 
     public Employee add(String firstName, String lastName, int departmentId, float salary) {
+        checkCorrectFirstLastName(firstName,lastName);
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
         if (employees.contains(employee)) {
             throw new EmployeeAlreadyAddedException("Такой пользователь уже имеется");
@@ -57,7 +62,23 @@ public class EmployeeService {
         }
     }
 
-    public Map<String,Employee> all() {
-        return employeesWithKey;
+    public List<Employee> all() {
+        return employees;
+    }
+
+    private void checkCorrectFirstLastName(String first, String last) {
+        checkCorrectDataEmployee(first);
+        checkCorrectDataEmployee(last);
+    }
+    private void checkCorrectDataEmployee(String name) {
+        if (StringUtils.isEmpty(name)) {
+            throw new IncorrectEmployeeDataException("Имя или фамилия не заполнены");
+        }
+        if (!name.equals(StringUtils.capitalize(StringUtils.lowerCase(name)))) {
+            throw new IncorrectEmployeeDataException("Имя или фамилия должны начинаться с заглавной буквы");
+        }
+        if (!StringUtils.isAlpha(name)) {
+            throw new IncorrectEmployeeDataException("Имя или фамилия содержат не только буквы");
+        }
     }
 }

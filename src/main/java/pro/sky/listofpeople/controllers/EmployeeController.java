@@ -2,13 +2,14 @@ package pro.sky.listofpeople.controllers;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.listofpeople.Employee;
+import pro.sky.listofpeople.exceptions.IncorrectEmployeeDataException;
+import pro.sky.listofpeople.model.Employee;
 import pro.sky.listofpeople.exceptions.EmployeeAlreadyAddedException;
 import pro.sky.listofpeople.exceptions.EmployeeNotFoundException;
 import pro.sky.listofpeople.exceptions.EmployeeStorageIsFullException;
 import pro.sky.listofpeople.service.EmployeeService;
 
-import java.util.Map;
+import java.util.List;
 
 @RestController
 
@@ -28,6 +29,12 @@ public class EmployeeController {
     @ExceptionHandler(EmployeeStorageIsFullException.class)
     public String handleException (EmployeeStorageIsFullException e) {
         return String.format("%s %s", HttpStatus.SERVICE_UNAVAILABLE.value(), e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(IncorrectEmployeeDataException.class)
+    public String handleException (IncorrectEmployeeDataException e) {
+        return String.format("%s %s", HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
@@ -55,7 +62,7 @@ public class EmployeeController {
     }
 
     @RequestMapping("/all")
-    public Map<String,Employee> all() {
+    public List<Employee> all() {
         return service.all();
     }
 }

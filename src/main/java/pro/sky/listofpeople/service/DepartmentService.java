@@ -1,6 +1,6 @@
 package pro.sky.listofpeople.service;
 
-import pro.sky.listofpeople.Employee;
+import pro.sky.listofpeople.model.Employee;
 import pro.sky.listofpeople.exceptions.DepartmentSearchException;
 
 import java.util.Comparator;

@@ -1,12 +1,10 @@
 package pro.sky.listofpeople.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pro.sky.listofpeople.Employee;
+import pro.sky.listofpeople.model.Employee;
 import pro.sky.listofpeople.exceptions.DepartmentSearchException;
 import pro.sky.listofpeople.service.DepartmentService;
-import pro.sky.listofpeople.service.EmployeeService;
 
 
 import java.util.List;
