@@ -7,8 +7,8 @@ public class Employee {
     private final int departmentId;
     private final float salary;
 
-
     public Employee(String firstname, String lastname, int departmentId, float salary) {
+
         this.firstname = firstname;
         this.lastname = lastname;
         this.departmentId = departmentId;
@@ -42,8 +42,8 @@ public class Employee {
     @Override
     public String toString() {
         return "Employee{" +
-                "firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
+                "lastname='" + firstname + '\'' +
+                ", firstname='" + lastname + '\'' +
                 '}';
     }
 

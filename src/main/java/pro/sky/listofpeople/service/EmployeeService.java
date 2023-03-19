@@ -5,12 +5,14 @@ import pro.sky.listofpeople.exceptions.EmployeeAlreadyAddedException;
 import pro.sky.listofpeople.exceptions.EmployeeNotFoundException;
 import pro.sky.listofpeople.exceptions.EmployeeStorageIsFullException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
 @Service
 public class EmployeeService {
+    public String key;
+
     private final int maxEmployeesCount = 11;
+
     List<Employee> employees = new ArrayList<>(Arrays.asList(
             new Employee("Арнольд","Шашков", 1, 94512),
             new Employee("Тарас","Власов", 2, 22432),
@@ -27,6 +29,7 @@ public class EmployeeService {
     public Employee find(String firstName, String lastName, int departmentId, float salary) {
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
         if (employees.contains(employee)) {
+
             return employee;
         } else throw new EmployeeNotFoundException("Такого пользователя нет в базе");
     }
@@ -35,6 +38,7 @@ public class EmployeeService {
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
         if (employees.contains(employee)) {
             employees.remove(employee);
+
             return employee;
         } else throw new EmployeeNotFoundException("Такого пользователя нет в базе");
     }
@@ -53,7 +57,7 @@ public class EmployeeService {
         }
     }
 
-    public List<Employee> all() {
-            return employees;
+    public Map<String,Employee> all() {
+        return employeesWithKey;
     }
 }
