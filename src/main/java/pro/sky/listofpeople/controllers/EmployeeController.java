@@ -1,13 +1,14 @@
 package pro.sky.listofpeople.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import pro.sky.listofpeople.exceptions.IncorrectEmployeeDataException;
+import pro.sky.listofpeople.interfaces.EmployeeService;
 import pro.sky.listofpeople.model.Employee;
 import pro.sky.listofpeople.exceptions.EmployeeAlreadyAddedException;
 import pro.sky.listofpeople.exceptions.EmployeeNotFoundException;
 import pro.sky.listofpeople.exceptions.EmployeeStorageIsFullException;
-import pro.sky.listofpeople.service.EmployeeService;
 
 import java.util.List;
 
@@ -15,8 +16,12 @@ import java.util.List;
 
 @RequestMapping(value = "/employee")
 public class EmployeeController {
-    EmployeeService service = new EmployeeService();
+    @Autowired
+    private final EmployeeService service;
 
+    public EmployeeController(EmployeeService service) {
+        this.service = service;
+    }
 
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -44,15 +49,13 @@ public class EmployeeController {
     }
 
     @RequestMapping("/find")
-    public Employee find(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
-                         @RequestParam("departmentId") int departmentId, @RequestParam("salary") float salary) {
-        return service.find(firstName, lastName, departmentId, salary);
+    public Employee find(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        return service.find(firstName,lastName);
     }
 
     @RequestMapping("/remove")
-    public Employee remove(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
-                           @RequestParam("departmentId") int departmentId, @RequestParam("salary") float salary) {
-        return service.remove(firstName, lastName, departmentId, salary);
+    public Employee remove(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        return service.remove(firstName, lastName);
     }
 
     @RequestMapping("/add")
