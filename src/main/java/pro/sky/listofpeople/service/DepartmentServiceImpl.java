@@ -31,19 +31,17 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Employee getEmployeeWithMaxSalary(int departmentId) {
         return employeeService.all().stream()
                 .filter(employee -> employee.getDepartmentId() == departmentId)
-                .min(Comparator.comparing(Employee::getSalary))
+                .max(Comparator.comparing(Employee::getSalary))
                 .orElseThrow(() -> new DepartmentSearchException("Департамент не найден"));
     }
-
-    public Double getSumSalaryInDepartment(int departmentId) {
-        double sumSolary = 0;
+    @Override
+    public Double getSumSalaryInDepartment(int departmentId)  {
         List<Employee> employeesInDepartment = employeeService.all().stream()
                 .filter(employee -> employee.getDepartmentId() == departmentId).toList();
-        for (Employee employees : employeesInDepartment) {
-            sumSolary += employees.getSalary();
+        if (employeesInDepartment.size() == 0) {
+            throw new DepartmentSearchException("Департамент не найден");
         }
-        if (sumSolary > 0) {return sumSolary;
-        } else throw new DepartmentSearchException("Департамент не найден");
+        return employeesInDepartment.stream().mapToDouble(Employee::getSalary).sum();
     }
 
     @Override

@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 import pro.sky.listofpeople.exceptions.*;
 import pro.sky.listofpeople.interfaces.EmployeeService;
 import pro.sky.listofpeople.model.Employee;
-
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-    private final int maxEmployeesCount = 11;
+    private final int maxEmployeesCount = 13;
 
-    List<Employee> employees = new ArrayList<>(Arrays.asList(
+     public List<Employee> employees = new ArrayList<>(Arrays.asList(
             new Employee("Арнольд", "Шашков", 1, 94512),
             new Employee("Тарас", "Власов", 2, 22432),
             new Employee("Егор", "Матвеев", 3, 27165),
@@ -26,46 +26,37 @@ public class EmployeeServiceImpl implements EmployeeService {
             new Employee("Астра", "Боброва", 5, 11446)
     ));
 
-    public Employee find(String firstName, String lastName) {
+    public List<Employee> find(String firstName, String lastName) {
         checkCorrectFirstLastName(firstName, lastName);
-        Employee employee = null;
-
-        for (Employee e : employees) {
-            if (e != null && firstName.equals(e.getFirstname()) && lastName.equals(e.getLastname())) {
-                employee = e;
-            }
-        }
-        if (employee == null) {
+        List<Employee> findEmployeer = employees.stream().filter(employee -> firstName.equals(employee.getFirstname())
+                && lastName.equals(employee.getLastname())).collect(Collectors.toList());
+        if (findEmployeer.isEmpty()) {
             throw new EmployeeNotFoundException("Такого пользователя нет в базе");
-        }
-        return employee;
+        } else return findEmployeer;
     }
 
-    public Employee remove(String firstName, String lastName) {
+    public List<Employee> remove(String firstName, String lastName) {
         checkCorrectFirstLastName(firstName, lastName);
-        Employee employee = null;
-
-        for (Employee e : employees) {
-            if (e != null && firstName.equals(e.getFirstname()) && lastName.equals(e.getLastname())) {
-                employees.remove(e);
-                return e;
-            }
-        }
-        if (employee == null) {
+        List<Employee> findEmployeerForRemove = employees.stream().filter(employee -> firstName.equals(employee.getFirstname())
+                && lastName.equals(employee.getLastname())).collect(Collectors.toList());
+        if (findEmployeerForRemove.isEmpty()) {
             throw new EmployeeNotFoundException("Такого пользователя нет в базе");
+        } else {
+            employees.removeAll(findEmployeerForRemove);
+            return findEmployeerForRemove;
         }
-        return null;
     }
 
     public Employee add(String firstName, String lastName, int departmentId, float salary) {
         checkCorrectFirstLastName(firstName, lastName);
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
+        if (employees.size() == maxEmployeesCount) {
+            throw new EmployeeStorageIsFullException("База данных переполнена");
+        }
         if (employees.contains(employee)) {
             throw new EmployeeAlreadyAddedException("Такой пользователь уже имеется");
         }
-        if (employees.size() == maxEmployeesCount) {
-            throw new EmployeeStorageIsFullException("База данных переполнена");
-        } else {
+         else {
             employees.add(employee);
             return employee;
         }
