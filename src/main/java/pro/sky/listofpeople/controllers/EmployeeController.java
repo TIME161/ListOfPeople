@@ -49,12 +49,12 @@ public class EmployeeController {
     }
 
     @RequestMapping("/find")
-    public Employee find(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+    public List<Employee> find(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
         return service.find(firstName,lastName);
     }
 
     @RequestMapping("/remove")
-    public Employee remove(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+    public List<Employee> remove(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
         return service.remove(firstName, lastName);
     }
 
