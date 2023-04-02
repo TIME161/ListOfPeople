@@ -32,11 +32,22 @@ class EmployeeServiceImplTest {
         );
     }
 
+    private static Stream<Arguments> namesInList2() {
+        return Stream.of(
+                Arguments.of("Ева", "Моисеева", 1, 25723),
+                Arguments.of("Ульяна", "Кузнецова", 3, 33706),
+                Arguments.of("Харитина", "Логинова", 4, 41129)
+        );
+    }
+
     private static Stream<Arguments> namesNew() {
         return Stream.of(
                 Arguments.of("Странный", "Кактус", 1, 94512),
                 Arguments.of("Сверепый", "Подстаканник", 2, 22432),
-                Arguments.of("Таинственный", "Тапок", 3, 27165)
+                Arguments.of("Таинственный", "Тапок", 3, 27165),
+                Arguments.of("Кактус", "Странный", 1, 94512),
+                Arguments.of("Подстаканник", "Сверепый", 2, 22432),
+                Arguments.of("Тапок", "Таинственный", 3, 27165)
         );
     }
     private static Stream<Arguments> namesNewForFullTesting() {
@@ -46,8 +57,7 @@ class EmployeeServiceImplTest {
                 Arguments.of("Третья", "Пустая", 1, 94512),
                 Arguments.of("Синий", "Подстаканник", 2, 22432),
                 Arguments.of("Темный", "Кактус", 1, 94512),
-                Arguments.of("Светлый", "Подстаканник", 2, 22432),
-                Arguments.of("Таинственный", "Тапок", 3, 27165)
+                Arguments.of("Светлый", "Подстаканник", 2, 22432)
         );
     }
 
@@ -78,7 +88,7 @@ class EmployeeServiceImplTest {
     }
 
     @ParameterizedTest(name = "{index} => firstName={0}, lastName={1}, department={2}, salary={3}")
-    @MethodSource("namesInList")
+    @MethodSource("namesInList2")
     void remove_returnMessege(String firstName, String lastName, int department, float salary) {
         Employee testEmployeer = new Employee(firstName, lastName, department, salary);
         List<Employee> expectedResult = new ArrayList<>();
@@ -96,6 +106,15 @@ class EmployeeServiceImplTest {
     }
 
     @ParameterizedTest(name = "{index} => firstName={0}, lastName={1}, department={2}, salary={3}")
+    @MethodSource("namesInList")
+    void add_withException(String firstName, String lastName, int department, float salary){
+        Exception exception = assertThrows(EmployeeAlreadyAddedException.class,
+                () -> employeeService.add(firstName,lastName,department,salary));
+        String expectedMessege = "Такой пользователь уже имеется";
+        assertEquals(expectedMessege,exception.getMessage());
+    }
+
+    @ParameterizedTest(name = "{index} => firstName={0}, lastName={1}, department={2}, salary={3}")
     @MethodSource("namesNew")
     void add(String firstName, String lastName, int department, float salary) {
         Employee expectedResult = new Employee(firstName, lastName, department, salary);
@@ -109,15 +128,6 @@ class EmployeeServiceImplTest {
         Exception exception = assertThrows(EmployeeStorageIsFullException.class,
                 () -> employeeService.add(firstName,lastName,department,salary));
         String expectedMessege = "База данных переполнена";
-        assertEquals(expectedMessege,exception.getMessage());
-    }
-
-    @ParameterizedTest(name = "{index} => firstName={0}, lastName={1}, department={2}, salary={3}")
-    @MethodSource("namesInList")
-    void add_withException(String firstName, String lastName, int department, float salary){
-        Exception exception = assertThrows(EmployeeAlreadyAddedException.class,
-                () -> employeeService.add(firstName,lastName,department,salary));
-        String expectedMessege = "Такой пользователь уже имеется";
         assertEquals(expectedMessege,exception.getMessage());
     }
 

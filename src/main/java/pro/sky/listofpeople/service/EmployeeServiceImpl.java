@@ -50,11 +50,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Employee add(String firstName, String lastName, int departmentId, float salary) {
         checkCorrectFirstLastName(firstName, lastName);
         Employee employee = new Employee(firstName, lastName, departmentId, salary);
-        if (employees.size() == maxEmployeesCount) {
-            throw new EmployeeStorageIsFullException("База данных переполнена");
-        }
         if (employees.contains(employee)) {
             throw new EmployeeAlreadyAddedException("Такой пользователь уже имеется");
+        }
+        if (employees.size() == maxEmployeesCount) {
+            throw new EmployeeStorageIsFullException("База данных переполнена");
         }
          else {
             employees.add(employee);
